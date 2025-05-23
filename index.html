@@ -3,213 +3,352 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WeAreGenz - Web Duoc Tao Boi KhanhDepTrai</title>
+  <title>WeAreGenz - Page Duoc Tao Boi KhanhDepTRai</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-    :root {
-      --bg-dark: #121212;
-      --bg-light: #f5f5f5;
-      --text-dark: #e0e0e0;
-      --text-light: #222;
-      --accent: #7b68ee;
+    /* Reset và font */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    html, body {
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #eee;
     }
     body {
-      margin: 0; padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
       min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
+      padding: 1rem;
+      background-color: rgba(0,0,0,0.5); /* overlay tối */
+      background-blend-mode: darken;
+      user-select: none;
     }
-    body.light {
-      background-color: var(--bg-light);
-      color: var(--text-light);
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 8px #ff6f61;
     }
-    header {
-      margin-top: 2rem;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--accent);
-    }
-    main {
-      margin-top: 3rem;
-      width: 90%;
-      max-width: 420px;
-      background: rgba(255 255 255 / 0.05);
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 0 15px rgba(123, 104, 238, 0.4);
-      text-align: center;
-    }
-    body.light main {
-      background: #eee;
-      box-shadow: 0 0 15px rgba(123, 104, 238, 0.5);
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    input[type=date] {
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: none;
-      font-size: 1rem;
-      width: 100%;
-      box-sizing: border-box;
+    #daysCount {
+      font-size: 5rem;
+      font-weight: 900;
       margin-bottom: 1.5rem;
+      text-shadow: 0 0 12px #ff6f61;
     }
-    .days-count {
-      font-size: 4rem;
-      font-weight: 700;
-      margin: 1rem 0 0.5rem;
-      color: var(--accent);
-    }
-    .quote {
-      font-style: italic;
-      font-size: 1.2rem;
-      margin-top: 2rem;
-      min-height: 60px;
-      color: var(--accent);
+    #description {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.4;
+      text-shadow: 0 0 6px #222;
     }
     button {
-      margin-top: 2rem;
-      padding: 0.6rem 1.4rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
       cursor: pointer;
-      background-color: var(--accent);
+      padding: 0.6rem 1.4rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 30px;
+      background: #ff6f61;
       color: white;
-      transition: background-color 0.3s;
+      box-shadow: 0 0 12px #ff6f61;
+      transition: background-color 0.3s ease;
+      user-select: none;
     }
     button:hover {
-      background-color: #5a4ecb;
+      background-color: #ff4834;
     }
-    footer {
-      margin: 3rem 0 1rem;
+    /* Modal chỉnh ngày */
+    #modalOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    #modal {
+      background: #222;
+      padding: 1.8rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #ff6f61;
+      text-align: center;
+      min-width: 300px;
+      max-width: 90vw;
+      color: #eee;
+    }
+    #modal label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+    #modal input[type="date"] {
+      padding: 0.5rem;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      width: 100%;
+      margin-bottom: 1.3rem;
+    }
+    #modalButtons {
+      display: flex;
+      justify-content: space-around;
+    }
+    #modalButtons button {
+      width: 45%;
+    }
+    /* Nút ngôn ngữ góc trên phải */
+    #languageBtn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #222;
+      border-radius: 20px;
+      padding: 0.4rem 0.8rem;
+      box-shadow: 0 0 12px #ff6f61;
+      color: #ff6f61;
+      font-weight: 700;
       font-size: 0.9rem;
-      color: #888;
+      z-index: 200;
+    }
+    #languageBtn:hover {
+      background: #ff6f61;
+      color: white;
+    }
+    /* Popup chọn ngôn ngữ */
+    #languageList {
+      position: fixed;
+      top: 50px;
+      right: 15px;
+      background: #222;
+      box-shadow: 0 0 20px #ff6f61;
+      border-radius: 12px;
+      display: none;
+      flex-direction: column;
+      width: 160px;
+      z-index: 201;
+    }
+    #languageList button {
+      background: none;
+      border: none;
+      color: #eee;
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+    }
+    #languageList button:hover {
+      background-color: #ff6f61;
+      color: white;
+    }
+    #languageCloseBtn {
+      align-self: flex-end;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #ff6f61;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 0.6rem;
+      margin-bottom: 0.3rem;
+      user-select: none;
+    }
+    /* Responsive */
+    @media(max-width: 480px){
+      h1 { font-size: 2.2rem; }
+      #daysCount { font-size: 3.5rem; }
+      #description { font-size: 1rem; max-width: 90vw;}
+      button { font-size: 1rem; padding: 0.5rem 1rem;}
+      #modal { padding: 1rem 1.5rem;}
+      #languageList { width: 140px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>WeAreGenz</h1>
-    <div>Chữa lành tâm hồn</div>
-  </header>
-  <main>
-    <label for="startDate">Chọn ngày bắt đầu cô đơn:</label>
-    <input type="date" id="startDate" max="" />
+  <button id="languageBtn">Ngôn Ngữ ▼</button>
 
-    <div class="days-count" id="daysCount">0</div>
-    <div>Ngày cô đơn</div>
+  <div id="languageList" role="list" aria-label="Chọn ngôn ngữ">
+    <button id="languageCloseBtn" aria-label="Đóng danh sách ngôn ngữ">×</button>
+    <button data-lang="vi">Tiếng Việt</button>
+    <button data-lang="en">English</button>
+    <button data-lang="jp">日本語</button>
+  </div>
 
-    <div class="quote" id="quote"></div>
+  <h1 id="title">Đếm Ngày Cô Đơn</h1>
+  <div id="daysCount">0</div>
+  <div id="description">Bạn đã sống một mình trong <span id="daysSpan">0</span> ngày.</div>
+  <button id="changeDateBtn">Chọn ngày bắt đầu sống một mình</button>
 
-    <button id="toggleThemeBtn">Chuyển giao diện sáng/tối</button>
-  </main>
-  <footer>
-    &copy; 2025 WeAreGenz - Chill & Healing
-  </footer>
+  <!-- Modal chỉnh ngày -->
+  <div id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+    <div id="modal">
+      <h2 id="modalTitle">Chọn ngày bắt đầu sống một mình</h2>
+      <label for="startDateInput">Ngày bắt đầu</label>
+      <input type="date" id="startDateInput" max="" aria-describedby="dateHelp" />
+      <div id="dateHelp" style="font-size:0.8rem; margin-bottom: 1rem; color:#aaa;">
+        Ngày không được lớn hơn ngày hôm nay.
+      </div>
+      <div id="modalButtons">
+        <button id="saveDateBtn">Lưu</button>
+        <button id="cancelDateBtn">Hủy</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    (() => {
-      const startDateInput = document.getElementById('startDate');
-      const daysCountEl = document.getElementById('daysCount');
-      const quoteEl = document.getElementById('quote');
-      const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+    // Lấy ngôn ngữ đã lưu hoặc mặc định
+    const savedLang = localStorage.getItem('language') || 'vi';
+    const lang = savedLang;
 
-      // Danh sách quote chữa lành
-      const quotes = [
-        "Cô đơn không phải là sự vắng mặt của ai đó, mà là sự hiện diện của chính mình.",
-        "Sau cơn mưa trời lại sáng, tâm hồn cũng cần những khoảng lặng để chữa lành.",
-        "Đau lòng hôm nay sẽ là sức mạnh ngày mai.",
-        "Cô đơn là dịp để ta yêu thương chính mình nhiều hơn.",
-        "Mỗi ngày qua đi là một bước tiến gần hơn đến bình yên.",
-        "Hãy kiên nhẫn với bản thân trong những ngày tăm tối nhất.",
-        "Người buồn cảnh có vui đâu bao giờ.",
-        "Chỉ khi trải qua cô đơn ta mới hiểu được giá trị của kết nối.",
-        "Trái tim tổn thương là trái tim đang học cách yêu sâu sắc hơn.",
-        "Hạnh phúc không phải là không cô đơn, mà là biết cách sống với cô đơn."
-      ];
-
-      // Hàm tính số ngày cô đơn
-      function calculateDays(start) {
-        const now = new Date();
-        const diff = now - start; // ms
-        return Math.floor(diff / (1000 * 60 * 60 * 24));
+    // Các chuỗi ngôn ngữ
+    const texts = {
+      vi: {
+        title: "Đếm Ngày Cô Đơn",
+        description: (days) => `Bạn đã sống một mình trong <span id="daysSpan">${days}</span> ngày.`,
+        changeDateBtn: "Chọn ngày bắt đầu sống một mình",
+        modalTitle: "Chọn ngày bắt đầu sống một mình",
+        labelDate: "Ngày bắt đầu",
+        dateHelp: "Ngày không được lớn hơn ngày hôm nay.",
+        saveBtn: "Lưu",
+        cancelBtn: "Hủy",
+        languageBtn: "Ngôn Ngữ ▼",
+        languageClose: "×",
+        langVi: "Tiếng Việt",
+        langEn: "English",
+        langJp: "日本語",
+      },
+      en: {
+        title: "Counting Lonely Days",
+        description: (days) => `You have been living alone for <span id="daysSpan">${days}</span> days.`,
+        changeDateBtn: "Select start date living alone",
+        modalTitle: "Select start date living alone",
+        labelDate: "Start date",
+        dateHelp: "Date cannot be in the future.",
+        saveBtn: "Save",
+        cancelBtn: "Cancel",
+        languageBtn: "Language ▼",
+        languageClose: "×",
+        langVi: "Tiếng Việt",
+        langEn: "English",
+        langJp: "日本語",
+      },
+      jp: {
+        title: "孤独な日数を数える",
+        description: (days) => `あなたは一人で過ごして <span id="daysSpan">${days}</span> 日目です。`,
+        changeDateBtn: "一人暮らしを始めた日を選択",
+        modalTitle: "一人暮らしを始めた日を選択",
+        labelDate: "開始日",
+        dateHelp: "未来の日付は選択できません。",
+        saveBtn: "保存",
+        cancelBtn: "キャンセル",
+        languageBtn: "言語 ▼",
+        languageClose: "×",
+        langVi: "Tiếng Việt",
+        langEn: "English",
+        langJp: "日本語",
       }
+    };
 
-      // Cập nhật hiển thị ngày
-      function updateDays() {
-        const dateStr = localStorage.getItem('startDate') || getTodayDateStr();
-        startDateInput.value = dateStr;
-        const start = new Date(dateStr + 'T00:00:00');
-        const days = calculateDays(start);
-        daysCountEl.textContent = days >= 0 ? days : 0;
+    // Set text theo ngôn ngữ
+    function updateTexts() {
+      const t = texts[lang];
+      document.getElementById('title').innerText = t.title;
+      document.getElementById('description').innerHTML = t.description(daysCount);
+      document.getElementById('changeDateBtn').innerText = t.changeDateBtn;
+      document.getElementById('modalTitle').innerText = t.modalTitle;
+      document.querySelector('label[for="startDateInput"]').innerText = t.labelDate;
+      document.getElementById('dateHelp').innerText = t.dateHelp;
+      document.getElementById('saveDateBtn').innerText = t.saveBtn;
+      document.getElementById('cancelDateBtn').innerText = t.cancelBtn;
+      document.getElementById('languageBtn').innerText = t.languageBtn;
+      // language list buttons
+      const langButtons = document.querySelectorAll('#languageList button[data-lang]');
+      langButtons[0].innerText = t.langVi;
+      langButtons[1].innerText = t.langEn;
+      langButtons[2].innerText = t.langJp;
+      document.getElementById('languageCloseBtn').innerText = t.languageClose;
+    }
+
+    // Tính số ngày từ startDate tới nay
+    function calcDays(startDate) {
+      const now = new Date();
+      const start = new Date(startDate);
+      const diff = now - start;
+      return diff >= 0 ? Math.floor(diff / (1000 * 60 * 60 * 24)) : 0;
+    }
+
+    // Load ngày bắt đầu từ localStorage hoặc mặc định là hôm nay
+    const savedDate = localStorage.getItem('startDate');
+    let startDate = savedDate || new Date().toISOString().split('T')[0];
+
+    let daysCount = calcDays(startDate);
+
+    // Hiển thị số ngày
+    function displayDays() {
+      document.getElementById('daysCount').innerText = daysCount;
+      // Cập nhật mô tả
+      const desc = texts[lang].description(daysCount);
+      document.getElementById('description').innerHTML = desc;
+    }
+
+    displayDays();
+    updateTexts();
+
+    // Set max ngày cho input date = hôm nay
+    const startDateInput = document.getElementById('startDateInput');
+    const todayISO = new Date().toISOString().split('T')[0];
+    startDateInput.max = todayISO;
+    startDateInput.value = startDate;
+
+    // Modal và nút mở
+    const modalOverlay = document.getElementById('modalOverlay');
+    const changeDateBtn = document.getElementById('changeDateBtn');
+
+    changeDateBtn.addEventListener('click', () => {
+      modalOverlay.style.display = 'flex';
+      startDateInput.focus();
+    });
+
+    // Nút hủy modal
+    document.getElementById('cancelDateBtn').addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+      startDateInput.value = startDate;
+    });
+
+    // Nút lưu ngày
+    document.getElementById('saveDateBtn').addEventListener('click', () => {
+      const val = startDateInput.value;
+      if (!val) {
+        alert(lang === 'vi' ? 'Vui lòng chọn ngày bắt đầu.' : lang === 'en' ? 'Please select a start date.' : '開始日を選択してください。');
+        startDateInput.focus();
+        return;
       }
-
-      // Chọn câu quote random
-      function showRandomQuote() {
-        const idx = Math.floor(Math.random() * quotes.length);
-        quoteEl.textContent = quotes[idx];
+      if (val > todayISO) {
+        alert(lang === 'vi' ? 'Ngày không được lớn hơn ngày hôm nay.' : lang === 'en' ? 'Date cannot be in the future.' : '未来の日付は選択できません。');
+        startDateInput.focus();
+        return;
       }
+      startDate = val;
+      localStorage.setItem('startDate', startDate);
+      daysCount = calcDays(startDate);
+      displayDays();
+      modalOverlay.style.display = 'none';
+    });
 
-      // Lấy ngày hôm nay chuẩn yyyy-mm-dd
-      function getTodayDateStr() {
-        const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`;
+    // Đóng modal khi click ngoài
+    modalOverlay.addEventListener('click', e => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+        startDateInput.value = startDate;
       }
+    });
 
-      // Lưu ngày vào localStorage khi thay đổi
-      startDateInput.addEventListener('change', () => {
-        localStorage.setItem('startDate', startDateInput.value);
-        updateDays();
-      });
-
-      // Đặt max ngày là hôm nay
-      startDateInput.max = getTodayDateStr();
-
-      // Theme toggle
-      function loadTheme() {
-        const theme = localStorage.getItem('theme') || 'dark';
-        if (theme === 'light') {
-          document.body.classList.add('light');
-          toggleThemeBtn.textContent = 'Chuyển giao diện tối';
-        } else {
-          document.body.classList.remove('light');
-          toggleThemeBtn.textContent = 'Chuyển giao diện sáng';
-        }
-      }
-
-      toggleThemeBtn.addEventListener('click', () => {
-        if (document.body.classList.contains('light')) {
-          document.body.classList.remove('light');
-          localStorage.setItem('theme', 'dark');
-          toggleThemeBtn.textContent = 'Chuyển giao diện sáng';
-        } else {
-          document.body.classList.add('light');
-          localStorage.setItem('theme', 'light');
-          toggleThemeBtn.textContent = 'Chuyển giao diện tối';
-        }
-      });
-
-      // Khởi tạo
-      updateDays();
-      showRandomQuote();
-      loadTheme();
-    })();
-  </script>
-</body>
-</html>
+    // Nút ngôn ngữ và popup
+    const languageBtn = document.getElementById('languageBtn');
+    const languageList = document.getElementById('
