@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WeAreGenZ - Page Được Code By KhanhDepTRy</title>
+<style>
+  /* Reset cơ bản */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin:0; padding:0;
+    height: 100%;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    overflow: hidden;
+    background: black;
+  }
+  #galaxy {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    display: block;
+  }
+  .app-container {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    text-align: center;
+  }
+  h1 {
+    font-size: 4rem;
+    margin: 0;
+    text-shadow:
+      0 0 10px #00ffff,
+      0 0 20px #00ffff,
+      0 0 30px #00ffff,
+      0 0 40px #00ffff,
+      0 0 70px #00ffff;
+  }
+  .subtitle {
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+    font-style: italic;
+    color: #a0ffffcc;
+    text-shadow: 0 0 5px #00ffff88;
+  }
+  .days-count {
+    margin-top: 2rem;
+    font-size: 2.5rem;
+    color: #7fffd4;
+    text-shadow: 0 0 7px #00ffffaa;
+  }
+  .btn {
+    margin-top: 2rem;
+    background: #00ffffcc;
+    border: none;
+    border-radius: 8px;
+    color: black;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.6rem 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ffff99;
+    transition: background-color 0.3s ease;
+  }
+  .btn:hover, .btn:focus {
+    background: #00ffffee;
+    outline: none;
+  }
+  /* Nút Ngôn Ngữ góc trên phải */
+  #langBtn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: #00ffffaa;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 20;
+    color: black;
+    font-weight: 600;
+    box-shadow: 0 0 6px #00ffffcc;
+    transition: background-color 0.3s ease;
+  }
+  #langBtn:hover, #langBtn:focus {
+    background: #00ffffee;
+    outline: none;
+  }
+
+  /* Modal chung */
+  .modal-overlay {
+    position: fixed;
+    top:0; left:0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-content {
+    background: #001f26;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    box-shadow:
+      0 0 15px #00ffffaa;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .modal-overlay.active .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #00ffffcc;
+    transition: color 0.3s ease;
+  }
+  .close-btn:hover, .close-btn:focus {
+    color: #00ffffee;
+    outline: none;
+  }
+  /* List ngôn ngữ */
+  .lang-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 0.5rem;
+  }
+  .lang-list li {
+    margin: 0.6rem 0;
+  }
+  .lang-list button {
+    width: 100%;
+    background: #004d66;
+    border: none;
+    border-radius: 8px;
+    color: #00ffffcc;
+    font-weight: 700;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 0 7px #00ffff88;
+    transition: background-color 0.3s ease;
+  }
+  .lang-list button:hover, .lang-list button:focus {
+    background: #007a99;
+    outline: none;
+  }
+  /* Input ngày bắt đầu */
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #00ffffcc;
+  }
+  input[type="date"] {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    border: 2px solid #00ffffcc;
+    background: #003344;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="date"]:focus {
+    outline: none;
+    border-color: #00ffffee;
+  }
+  input[type="date"].invalid {
+    border-color: #ff4444;
+    background: #330000;
+  }
+  .error-msg {
+    color: #ff4444;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="galaxy" aria-hidden="true"></canvas>
+
+<button id="langBtn" aria-label="Chọn ngôn ngữ">Ngôn Ngữ</button>
+
+<div class="app-container" role="main">
+  <h1 id="title">WeAreGenZ</h1>
+  <div class="subtitle" id="subtitle">Page Được Code By KhanhDepTRy</div>
+  <div class="days-count" id="daysCount" aria-live="polite">Đang tính số ngày sống một mình...</div>
+  <button class="btn" id="changeDateBtn" aria-label="Chọn lại ngày bắt đầu">Chọn lại ngày bắt đầu</button>
+</div>
+
+<!-- Modal Ngôn ngữ -->
+<div class="modal-overlay" id="langModal" role="dialog" aria-modal="true" aria-labelledby="langModalTitle" tabindex="-1" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="close-btn" id="closeLangModal" aria-label="Đóng cửa sổ chọn ngôn ngữ">&times;</button>
+    </div>
+    <h2 id="langModalTitle" style="color:#00ffffcc; margin-top:0;">Chọn Ngôn Ngữ / Choose Language / 言語を選択</h2>
+    <ul class="lang-list">
+      <li><button data-lang="vi" aria-label="Chọn tiếng Việt">Tiếng Việt</button></li>
+      <li><button data-lang="en" aria-label="Select English">English</button></li>
+      <li><button data-lang="jp" aria-label="日本語を選択">日本語</button></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Modal Ngày bắt đầu -->
+<div class="modal-overlay" id="dateModal" role="dialog" aria-modal="true" aria-labelledby="dateModalTitle" tabindex="-1" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="close-btn" id="closeDateModal" aria-label="Đóng cửa sổ chọn ngày">&times;</button>
+    </div>
+    <h2 id="dateModalTitle" style="color:#00ffffcc; margin-top:0;">Chọn ngày bắt đầu sống một mình</h2>
+    <form id="dateForm" novalidate>
+      <label for="startDateInput" id="dateInputLabel">Ngày bắt đầu:</label>
+      <input type="date" id="startDateInput" aria-required="true" aria-describedby="errorMsg" />
+      <div class="error-msg" id="errorMsg" role="alert" aria-live="assertive" style="display:none;">Ngày không hợp lệ</div>
+      <button type="submit" class="btn" aria-label="Xác nhận ngày bắt đầu">Xác nhận</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // =======================
+  // NỀN GALAXY đơn giản chill chill
+  // =======================
+  const canvas = document.getElementById('galaxy');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Star {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.size = Math.random() * 1.5 + 0.2;
+      this.speed = Math.random() * 0.05 + 0.01;
+      this.alpha = Math.random();
+      this.alphaDir = Math.random() > 0.5 ? 1 : -1;
+    }
+
+    update() {
+      this.alpha += 0.01 * this.alphaDir;
+      if (this.alpha <= 0.1 || this.alpha >= 1) this.alphaDir *= -1;
+      this.y -= this.speed;
+      if (this.y < 0) this.y = H;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(0,255,255,${this.alpha.toFixed(2)})`;
+      ctx.shadowColor = "cyan";
+      ctx.shadowBlur = 8;
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  class ShootingStar {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H / 2;
+      this.len = Math.random() * 300 + 100;
+      this.speed = Math.random() * 10 + 6;
+      this.alpha = 1;
+      this.active = true;
+    }
+
+    update() {
+      this.x -= this.speed;
+      this.y += this.speed / 2;
+      this.alpha -= 0.01;
+      if (this.alpha <= 0) this.active = false;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(this.x + this.len, this.y - this.len / 2);
+      ctx.strokeStyle = `rgba(255,255,255,${this.alpha})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  const stars = [];
+  const backgroundStars = [];
+  const shootingStars = [];
+
+  const backgroundStarCount = 30;
+  for (let i = 0; i < backgroundStarCount; i++) {
+    const s = new Star();
+    s.size *= 2;
+    s.speed *= 0.3;
+    s.alpha *= 0.5;
+    backgroundStars.push(s);
+  }
+
+  const starsCount = 150;
+  for (let i = 0; i < starsCount; i++) {
+    stars.push(new Star());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Glow gradient center (fake galaxy core)
+    const grad = ctx.createRadialGradient(W / 2, H / 2, 50, W / 2, H / 2, W / 1.5);
+    grad.addColorStop(0, 'rgba(0,255,255,0.15)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    for (let star of backgroundStars) {
+      star.update();
+      star.draw();
+    }
+
+    for (let star of stars) {
+      star.update();
+      star.draw();
+    }
+
+    if (Math.random() < 0.005) {
+      shootingStars.push(new ShootingStar());
+    }
+
+    for (let i = shootingStars.length - 1; i >= 0; i--) {
+      const s = shootingStars[i];
+      if (s.active) {
+        s.update();
+        s.draw();
+      } else {
+        shootingStars.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // =======================
+  // Lưu trữ & xử lý ngôn ngữ
+  // =======================
+  // Nội dung đa ngôn ngữ
+  const texts = {
+    vi: {
+      title: "WeAreGenZ",
+      subtitle: "Page Được Code By KhanhDepTRy",
+      daysCountText: (n) => `Bạn đã sống một mình được ${n} ngày`,
+      changeDateBtn: "Chọn lại ngày bắt đầu",
+      langBtn: "Ngôn Ngữ",
+      langModalTitle: "Chọn Ngôn Ngữ",
+      dateModalTitle: "Chọn ngày bắt đầu sống một mình",
+      dateInputLabel: "Ngày bắt đầu:",
+      errorInvalidDate: "Ngày không hợp lệ",
+      confirmBtn: "Xác nhận"
+    },
+    en: {
+      title: "WeAreGenZ",
+      subtitle: "Page Coded By KhanhDepTRy",
+      daysCountText: (n) => `You have been alone for ${n} days`,
+      changeDateBtn: "Change Start Date",
+      langBtn: "Language",
+      langModalTitle: "Select Language",
+      dateModalTitle: "Select start date living alone",
+      dateInputLabel: "Start Date:",
+      errorInvalidDate: "Invalid date",
+      confirmBtn: "Confirm"
+    },
+    jp: {
+      title: "WeAreGenZ",
+      subtitle: "コード：KhanhDepTRy",
+      daysCountText: (n) => `あなたは一人で ${n} 日間暮らしています`,
+      changeDateBtn: "開始日を変更",
+      langBtn: "言語",
+      langModalTitle: "言語を選択",
+      dateModalTitle: "一人暮らし開始日を選択",
+      dateInputLabel: "開始日:",
+      errorInvalidDate: "無効な日付",
+      confirmBtn: "確認"
+    }
+  };
+
+  // Lấy ngôn ngữ đã lưu hoặc mặc định vi
+  function getLang() {
+    const lang = localStorage.getItem('waGenZ_lang');
+    if(lang && ['vi','en','jp'].includes(lang)) return lang;
+    return 'vi';
+  }
+  function setLang(l) {
+    localStorage.setItem('waGenZ_lang', l);
+  }
+
+  // =======================
+  // Cập nhật nội dung theo ngôn ngữ
+  // =======================
+  function updateTexts() {
+    const lang = getLang();
+    const t = texts[lang];
+    document.getElementById('title').textContent = t.title;
+    document.getElementById('subtitle').textContent = t.subtitle;
+    document.getElementById('changeDateBtn').textContent = t.changeDateBtn;
+    document.getElementById('langBtn').textContent = t.langBtn;
+    document.getElementById('langModalTitle').textContent = t.langModalTitle;
+    document.getElementById('dateModalTitle').textContent = t.dateModalTitle;
+    document.getElementById('dateInputLabel').textContent = t.dateInputLabel;
+    document.getElementById('errorMsg').textContent = t.errorInvalidDate;
+    document.querySelector('#dateForm button[type=submit]').textContent = t.confirmBtn;
+  }
+
+  // =======================
+  // Modal xử lý - đóng mở & trap focus
+  // =======================
+  function trapFocus(modal) {
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if(focusableElements.length === 0) return;
+    const firstEl = focusableElements[0];
+    const lastEl = focusableElements[focusableElements.length-1];
+
+    function handleTab(e) {
+      if(e.key === 'Tab') {
+        if(e.shiftKey) { // shift+tab
+          if(document.activeElement === firstEl) {
+            e.preventDefault();
+            lastEl.focus();
+          }
+        } else { // tab
+          if(document.activeElement === lastEl) {
+            e.preventDefault();
+            firstEl.focus();
+          }
+        }
+      }
+      if(e.key === 'Escape') {
+        closeModal(modal);
+      }
+    }
+    modal.addEventListener('keydown', handleTab);
+    return () => modal.removeEventListener('keydown', handleTab);
+  }
+
+  function openModal(modal) {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    // Focus trap
+    const removeTrap = trapFocus(modal);
+    // Focus nút đầu tiên trong modal
+    const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if(focusable.length) focusable[0].focus();
+    return removeTrap;
+  }
+  function closeModal(modal) {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  // =======================
+  // Xử lý ngôn ngữ
+  // =======================
+  const langBtn = document.getElementById('langBtn');
+  const langModal = document.getElementById('langModal');
+  const closeLangModalBtn = document.getElementById('closeLangModal');
+  let removeTrapLang = null;
+
+  langBtn.addEventListener('click', () => {
+    removeTrapLang = openModal(langModal);
+  });
+  closeLangModalBtn.addEventListener('click', () => {
+    closeModal(langModal);
+    if(removeTrapLang) removeTrapLang();
+  });
+  langModal.addEventListener('click', e => {
+    if(e.target === langModal) {
+      closeModal(langModal);
+      if(removeTrapLang) removeTrapLang();
+    }
+  });
+  langModal.querySelectorAll('.lang-list button').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const selectedLang = btn.dataset.lang;
+      setLang(selectedLang);
+      location.reload();
+    });
+  });
+
+  // =======================
+  // Xử lý popup chọn ngày bắt đầu
+  // =======================
+  const dateModal = document.getElementById('dateModal');
+  const closeDateModalBtn = document.getElementById('closeDateModal');
+  const changeDateBtn = document.getElementById('changeDateBtn');
+  const dateForm = document.getElementById('dateForm');
+  const startDateInput = document.getElementById('startDateInput');
+  const errorMsg = document.getElementById('errorMsg');
+  let removeTrapDate = null;
+
+  function openDateModal() {
+    removeTrapDate = openModal(dateModal);
+    errorMsg.style.display = 'none';
+    startDateInput.classList.remove('invalid');
+    // Set giá trị input bằng ngày đã lưu hoặc ngày hôm nay
+    const storedDate = localStorage.getItem('waGenZ_startDate');
+    startDateInput.value = storedDate || '';
+  }
+  function closeDateModal() {
+    closeModal(dateModal);
+    if(removeTrapDate) removeTrapDate();
+  }
+  closeDateModalBtn.addEventListener('click', closeDateModal);
+  changeDateBtn.addEventListener('click', openDateModal);
+  dateModal.addEventListener('click', e => {
+    if(e.target === dateModal) {
+      closeDateModal();
+    }
+  });
+
+  // Kiểm tra ngày hợp lệ, không được để ngày tương lai
+  function validateDate(dateStr) {
+    if(!dateStr) return false;
+    const date = new Date(dateStr);
+    if(isNaN(date.getTime())) return false;
+    const today = new Date();
+    // Đặt giờ 0h0'0'' cho so sánh đúng ngày
+    today.setHours(0,0,0,0);
+    if(date > today) return false;
+    return true;
+  }
+
+  dateForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const val = startDateInput.value;
+    if(!validateDate(val)) {
+      errorMsg.style.display = 'block';
+      startDateInput.classList.add('invalid');
+      startDateInput.focus();
+      return;
+    }
+    errorMsg.style.display = 'none';
+    startDateInput.classList.remove('invalid');
+    localStorage.setItem('waGenZ_startDate', val);
+    closeDateModal();
+    updateDaysCount();
+  });
+
+  // =======================
+  // Tính ngày sống một mình
+  // =======================
+  function updateDaysCount() {
+    const lang = getLang();
+    const t = texts[lang];
+    const daysCountEl = document.getElementById('daysCount');
+    const startDateStr = localStorage.getItem('waGenZ_startDate');
+    if(!startDateStr) {
+      daysCountEl.textContent = t.daysCountText(0);
+      openDateModal();
+      return;
+    }
+    const startDate = new Date(startDateStr);
+    const today = new Date();
+    // reset giờ để tính chính xác
+    startDate.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
+    let diff = Math.floor((today - startDate) / (1000*60*60*24));
+    if(diff < 0) diff = 0;
+    daysCountEl.textContent = t.daysCountText(diff);
+  }
+
+  // =======================
+  // Khởi tạo
+  // =======================
+  updateTexts();
+  updateDaysCount();
+
+</script>
+
+</body>
+</html>
