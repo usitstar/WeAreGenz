@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WeAreGenz - Web Duoc Tao Boi KhanhDepTrai</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+    :root {
+      --bg-dark: #121212;
+      --bg-light: #f5f5f5;
+      --text-dark: #e0e0e0;
+      --text-light: #222;
+      --accent: #7b68ee;
+    }
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+    header {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+    main {
+      margin-top: 3rem;
+      width: 90%;
+      max-width: 420px;
+      background: rgba(255 255 255 / 0.05);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 15px rgba(123, 104, 238, 0.4);
+      text-align: center;
+    }
+    body.light main {
+      background: #eee;
+      box-shadow: 0 0 15px rgba(123, 104, 238, 0.5);
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    input[type=date] {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 1.5rem;
+    }
+    .days-count {
+      font-size: 4rem;
+      font-weight: 700;
+      margin: 1rem 0 0.5rem;
+      color: var(--accent);
+    }
+    .quote {
+      font-style: italic;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      min-height: 60px;
+      color: var(--accent);
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.6rem 1.4rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: var(--accent);
+      color: white;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #5a4ecb;
+    }
+    footer {
+      margin: 3rem 0 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>WeAreGenz</h1>
+    <div>Chữa lành tâm hồn</div>
+  </header>
+  <main>
+    <label for="startDate">Chọn ngày bắt đầu cô đơn:</label>
+    <input type="date" id="startDate" max="" />
+
+    <div class="days-count" id="daysCount">0</div>
+    <div>Ngày cô đơn</div>
+
+    <div class="quote" id="quote"></div>
+
+    <button id="toggleThemeBtn">Chuyển giao diện sáng/tối</button>
+  </main>
+  <footer>
+    &copy; 2025 WeAreGenz - Chill & Healing
+  </footer>
+
+  <script>
+    (() => {
+      const startDateInput = document.getElementById('startDate');
+      const daysCountEl = document.getElementById('daysCount');
+      const quoteEl = document.getElementById('quote');
+      const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+
+      // Danh sách quote chữa lành
+      const quotes = [
+        "Cô đơn không phải là sự vắng mặt của ai đó, mà là sự hiện diện của chính mình.",
+        "Sau cơn mưa trời lại sáng, tâm hồn cũng cần những khoảng lặng để chữa lành.",
+        "Đau lòng hôm nay sẽ là sức mạnh ngày mai.",
+        "Cô đơn là dịp để ta yêu thương chính mình nhiều hơn.",
+        "Mỗi ngày qua đi là một bước tiến gần hơn đến bình yên.",
+        "Hãy kiên nhẫn với bản thân trong những ngày tăm tối nhất.",
+        "Người buồn cảnh có vui đâu bao giờ.",
+        "Chỉ khi trải qua cô đơn ta mới hiểu được giá trị của kết nối.",
+        "Trái tim tổn thương là trái tim đang học cách yêu sâu sắc hơn.",
+        "Hạnh phúc không phải là không cô đơn, mà là biết cách sống với cô đơn."
+      ];
+
+      // Hàm tính số ngày cô đơn
+      function calculateDays(start) {
+        const now = new Date();
+        const diff = now - start; // ms
+        return Math.floor(diff / (1000 * 60 * 60 * 24));
+      }
+
+      // Cập nhật hiển thị ngày
+      function updateDays() {
+        const dateStr = localStorage.getItem('startDate') || getTodayDateStr();
+        startDateInput.value = dateStr;
+        const start = new Date(dateStr + 'T00:00:00');
+        const days = calculateDays(start);
+        daysCountEl.textContent = days >= 0 ? days : 0;
+      }
+
+      // Chọn câu quote random
+      function showRandomQuote() {
+        const idx = Math.floor(Math.random() * quotes.length);
+        quoteEl.textContent = quotes[idx];
+      }
+
+      // Lấy ngày hôm nay chuẩn yyyy-mm-dd
+      function getTodayDateStr() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+
+      // Lưu ngày vào localStorage khi thay đổi
+      startDateInput.addEventListener('change', () => {
+        localStorage.setItem('startDate', startDateInput.value);
+        updateDays();
+      });
+
+      // Đặt max ngày là hôm nay
+      startDateInput.max = getTodayDateStr();
+
+      // Theme toggle
+      function loadTheme() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        if (theme === 'light') {
+          document.body.classList.add('light');
+          toggleThemeBtn.textContent = 'Chuyển giao diện tối';
+        } else {
+          document.body.classList.remove('light');
+          toggleThemeBtn.textContent = 'Chuyển giao diện sáng';
+        }
+      }
+
+      toggleThemeBtn.addEventListener('click', () => {
+        if (document.body.classList.contains('light')) {
+          document.body.classList.remove('light');
+          localStorage.setItem('theme', 'dark');
+          toggleThemeBtn.textContent = 'Chuyển giao diện sáng';
+        } else {
+          document.body.classList.add('light');
+          localStorage.setItem('theme', 'light');
+          toggleThemeBtn.textContent = 'Chuyển giao diện tối';
+        }
+      });
+
+      // Khởi tạo
+      updateDays();
+      showRandomQuote();
+      loadTheme();
+    })();
+  </script>
+</body>
+</html>
