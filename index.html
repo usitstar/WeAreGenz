@@ -93,6 +93,27 @@
             background: #00ffffee;
             outline: none;
         }
+        /* Nút Chơi X-O góc trên trái (bên dưới nút nhạc) */
+        #ticTacToeBtn {
+            position: fixed;
+            top: 1rem; /* Điều chỉnh vị trí để không bị chồng lên nút nhạc */
+            left: 1rem;
+            background: #00ffffaa;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 20;
+            color: black;
+            font-weight: 600;
+            box-shadow: 0 0 6px #00ffffcc;
+            transition: background-color 0.3s ease;
+        }
+        #ticTacToeBtn:hover, #ticTacToeBtn:focus {
+            background: #00ffffee;
+            outline: none;
+        }
         /* Modal chung */
         .modal-overlay {
             position: fixed;
@@ -202,11 +223,197 @@
             font-size: 0.9rem;
             margin-top: 0.3rem;
         }
+
+        /* --- CSS cho Game X-O --- */
+        #ticTacToeModal .modal-content {
+            background: #001a1f; /* Nền tối hơn cho game */
+            max-width: 500px; /* Tăng kích thước modal cho game */
+            padding: 1.5rem; /* Giảm padding một chút để vừa vặt hơn */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: visible; /* Cho phép hoa hiển thị ngoài modal-content nhưng trong modal-overlay */
+        }
+        #gameArea {
+            position: relative; /* Quan trọng cho việc định vị hoa */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: fit-content; /* Điều chỉnh width để bao quanh bảng */
+            padding: 10px; /* Tạo không gian cho hoa */
+        }
+        #ticTacToeGame {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin-top: 20px;
+            background-color: #00ffff33; /* Đường kẻ bảng */
+            padding: 5px;
+            border-radius: 8px;
+            width: fit-content; /* Đảm bảo bảng game không quá rộng */
+            flex-shrink: 0; /* Ngăn bảng co lại */
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            position: relative; /* Cho các hiệu ứng con */
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #001f26; /* Nền ô */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #00ffff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .cell:hover {
+            background-color: #003344;
+            transform: scale(1.02);
+        }
+        .cell.x {
+            color: #ff4444; /* Màu cho X */
+        }
+        .cell.o {
+            color: #44eeff; /* Màu cho O */
+        }
+        #gameStatus {
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff88;
+        }
+        #restartGameBtn {
+            margin-top: 1rem;
+            background: #00ffffcc;
+            border: none;
+            border-radius: 8px;
+            color: black;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.6rem 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00ffff99;
+            transition: background-color 0.3s ease;
+        }
+        #restartGameBtn:hover, #restartGameBtn:focus {
+            background: #00ffffee;
+            outline: none;
+        }
+        #gameStatsContainer {
+            margin-top: 2rem;
+            width: 90%;
+            background: #002c33;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            text-align: center;
+        }
+        #gameStatsContainer h3 {
+            color: #00ffff;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        #gameStatsList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1.1rem;
+        }
+        #gameStatsList li {
+            padding: 0.5rem 0;
+            color: #fff;
+        }
+        #gameStatsList li span {
+            font-weight: bold;
+            color: #7fffd4;
+        }
+
+        /* --- Flower Border Effect CSS --- */
+        #flowerBorderContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden; /* Đảm bảo hoa không tràn quá xa khỏi khung gameArea */
+            z-index: 1; /* Đặt hoa ở trên bảng game nhưng dưới nội dung khác */
+            display: none; /* Mặc định ẩn, chỉ hiển thị khi game mở */
+            border-radius: 8px; /* Bo tròn theo bảng game */
+        }
+
+        .flower-petal {
+            position: absolute;
+            width: var(--petal-size);
+            height: var(--petal-size);
+            background-size: contain; /* Điều chỉnh kích thước hình ảnh để vừa với phần tử */
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall var(--animation-duration) linear infinite,
+                       sway var(--sway-duration) ease-in-out infinite alternate;
+        }
+
+        /* Keyframes cho hiệu ứng rơi */
+        @keyframes fall {
+            0% {
+                transform: translateY(var(--start-y)) translateX(var(--start-x)) rotateZ(var(--start-rot));
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(var(--end-y)) translateX(var(--end-x)) rotateZ(var(--end-rot));
+                opacity: 0;
+            }
+        }
+
+        /* Keyframes cho hiệu ứng lắc lư */
+        @keyframes sway {
+            0% {
+                transform: rotate(0deg) translateX(0px);
+            }
+            50% {
+                transform: rotate(var(--sway-rotation)) translateX(var(--sway-offset));
+            }
+            100% {
+                transform: rotate(0deg) translateX(0px);
+            }
+        }
+
+        /* Responsive cho game X-O */
+        @media (max-width: 550px) {
+            #ticTacToeGame {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            .cell {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5em;
+            }
+            #ticTacToeModal .modal-content {
+                max-width: 95%; /* Tăng độ rộng trên di động */
+                padding: 1rem;
+            }
+            #gameStatus {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
 
 <canvas id="galaxy" aria-hidden="true"></canvas>
+
+<button id="ticTacToeBtn" aria-label="Chơi game X-O">🎮 Chơi X-O</button>
 
 <button id="langBtn" aria-label="Chọn ngôn ngữ">Ngôn Ngữ</button>
 
@@ -217,7 +424,6 @@
     <button class="btn" id="changeDateBtn" aria-label="Chọn lại ngày bắt đầu">Chọn lại ngày bắt đầu</button>
 </div>
 
-<!-- Modal Ngôn ngữ -->
 <div class="modal-overlay" id="langModal" role="dialog" aria-modal="true" aria-labelledby="langModalTitle" tabindex="-1" aria-hidden="true">
     <div class="modal-content">
         <div class="modal-header">
@@ -232,7 +438,6 @@
     </div>
 </div>
 
-<!-- Modal Ngày bắt đầu -->
 <div class="modal-overlay" id="dateModal" role="dialog" aria-modal="true" aria-labelledby="dateModalTitle" tabindex="-1" aria-hidden="true">
     <div class="modal-content">
         <div class="modal-header">
@@ -248,138 +453,157 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="ticTacToeModal" role="dialog" aria-modal="true" aria-labelledby="ticTacToeTitle" tabindex="-1" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close-btn" id="closeTicTacToeModal" aria-label="Đóng game X-O">&times;</button>
+        </div>
+        <h2 id="ticTacToeTitle" style="color:#00ffffcc; margin-top:0;">Cờ Caro (Tic-Tac-Toe) - Chơi với TanamiChatbot</h2>
+
+        <div id="gameArea">
+            <div id="flowerBorderContainer"></div> 
+            <div id="gameStatus"></div>
+            <div id="ticTacToeGame">
+                <div class="cell" data-cell-index="0"></div>
+                <div class="cell" data-cell-index="1"></div>
+                <div class="cell" data-cell-index="2"></div>
+                <div class="cell" data-cell-index="3"></div>
+                <div class="cell" data-cell-index="4"></div>
+                <div class="cell" data-cell-index="5"></div>
+                <div class="cell" data-cell-index="6"></div>
+                <div class="cell" data-cell-index="7"></div>
+                <div class="cell" data-cell-index="8"></div>
+            </div>
+            <button id="restartGameBtn"></button>
+        </div>
+
+        <div id="gameStatsContainer">
+            <h3 id="gameStatsTitle"></h3>
+            <ul id="gameStatsList">
+                <li id="playerWins"></li>
+                <li id="aiWins"></li>
+                <li id="draws"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <script>
     // =======================
-    // NỀN GALAXY đơn giản chill chill
+    // NỀN GALAXY mới (từ bạn cung cấp)
     // =======================
     const canvas = document.getElementById('galaxy');
     const ctx = canvas.getContext('2d');
-    let W, H;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    function resize() {
-        W = window.innerWidth;
-        H = window.innerHeight;
-        canvas.width = W;
-        canvas.height = H;
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    function randomColor() {
+      const colors = ['#ffffff', '#8fd3f4', '#fbc2eb', '#f6d365', '#c3cfe2', '#f7797d', '#c2e9fb'];
+      return colors[Math.floor(Math.random() * colors.length)];
     }
-    resize();
-    window.addEventListener('resize', resize);
+
+    // === Stars ===
+    const stars = [];
+    const numStars = 300;
 
     class Star {
-        constructor() {
-            this.reset();
-        }
+      constructor() {
+        this.reset();
+      }
 
-        reset() {
-            this.x = Math.random() * W;
-            this.y = Math.random() * H;
-            this.size = Math.random() * 1.5 + 0.2;
-            this.speed = Math.random() * 0.05 + 0.01;
-            this.alpha = Math.random();
-            this.alphaDir = Math.random() > 0.5 ? 1 : -1;
-        }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.z = Math.random() * canvas.width;
+        this.radius = Math.random() * 1.2 + 0.2;
+        this.color = randomColor();
+      }
 
-        update() {
-            this.alpha += 0.01 * this.alphaDir;
-            if (this.alpha <= 0.1 || this.alpha >= 1) this.alphaDir *= -1;
-            this.y -= this.speed;
-            if (this.y < 0) this.y = H;
-        }
+      draw() {
+        let scale = canvas.width / (canvas.width + this.z);
+        let x = this.x * scale;
+        let y = this.y * scale;
+        let r = this.radius * scale;
 
-        draw() {
-            ctx.beginPath();
-            ctx.fillStyle = `rgba(0,255,255,${this.alpha.toFixed(2)})`;
-            ctx.shadowColor = "cyan";
-            ctx.shadowBlur = 8;
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = 0.8;
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      update() {
+        this.z -= 0.5;
+        if (this.z <= 0) {
+          this.reset();
+          this.z = canvas.width;
         }
+      }
     }
 
-    class ShootingStar {
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.x = Math.random() * W;
-            this.y = Math.random() * H / 2;
-            this.len = Math.random() * 300 + 100;
-            this.speed = Math.random() * 10 + 6;
-            this.alpha = 1;
-            this.active = true;
-        }
-
-        update() {
-            this.x -= this.speed;
-            this.y += this.speed / 2;
-            this.alpha -= 0.01;
-            if (this.alpha <= 0) this.active = false;
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + this.len, this.y - this.len / 2);
-            ctx.strokeStyle = `rgba(255,255,255,${this.alpha})`;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
+    for (let i = 0; i < numStars; i++) {
+      stars.push(new Star());
     }
 
-    const stars = [];
-    const backgroundStars = [];
-    const shootingStars = [];
+    // === Nebula (Tinh vân bụi) ===
+    const nebulas = [];
+    const nebulaCount = 10;
 
-    const backgroundStarCount = 30;
-    for (let i = 0; i < backgroundStarCount; i++) {
-        const s = new Star();
-        s.size *= 2;
-        s.speed *= 0.3;
-        s.alpha *= 0.5;
-        backgroundStars.push(s);
+    class Nebula {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 300 + 100;
+        this.color = randomColor();
+        this.opacity = Math.random() * 0.1 + 0.05;
+        this.vx = Math.random() * 0.2 - 0.1;
+        this.vy = Math.random() * 0.2 - 0.1;
+      }
+
+      draw() {
+        let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+        gradient.addColorStop(0, this.color + Math.floor(this.opacity * 255).toString(16).padStart(2, '0'));
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Nếu bay ra khỏi màn thì reset lại
+        if (this.x < -this.size || this.x > canvas.width + this.size ||
+            this.y < -this.size || this.y > canvas.height + this.size) {
+          this.reset();
+        }
+      }
     }
 
-    const starsCount = 150;
-    for (let i = 0; i < starsCount; i++) {
-        stars.push(new Star());
+    for (let i = 0; i < nebulaCount; i++) {
+      nebulas.push(new Nebula());
     }
 
+    // === Main loop ===
     function animate() {
-        ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Glow gradient center (fake galaxy core)
-        const grad = ctx.createRadialGradient(W / 2, H / 2, 50, W / 2, H / 2, W / 1.5);
-        grad.addColorStop(0, 'rgba(0,255,255,0.15)');
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, W, H);
+      nebulas.forEach(n => { n.update(); n.draw(); });
+      stars.forEach(s => { s.update(); s.draw(); });
 
-        for (let star of backgroundStars) {
-            star.update();
-            star.draw();
-        }
-
-        for (let star of stars) {
-            star.update();
-            star.draw();
-        }
-
-        if (Math.random() < 0.005) {
-            shootingStars.push(new ShootingStar());
-        }
-
-        for (let i = shootingStars.length - 1; i >= 0; i--) {
-            const s = shootingStars[i];
-            if (s.active) {
-                s.update();
-                s.draw();
-            } else {
-                shootingStars.splice(i, 1);
-            }
-        }
-
-        requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
 
     animate();
@@ -398,7 +622,18 @@
             dateModalTitle: "Chọn ngày bắt đầu sống một mình",
             dateInputLabel: "Ngày bắt đầu:",
             errorInvalidDate: "Ngày không hợp lệ",
-            confirmBtn: "Xác nhận"
+            confirmBtn: "Xác nhận",
+            // Game X-O texts
+            ticTacToeBtn: "🎮 Chơi X-O",
+            ticTacToeTitle: "Cờ Caro (Tic-Tac-Toe) - Chơi với TanamiChatbot",
+            playerTurn: (player) => `Lượt của ${player}`,
+            playerWin: (player) => `${player} đã thắng!`,
+            draw: "Hòa!",
+            restartGame: "Chơi Lại",
+            gameStatsTitle: "Thống Kê",
+            playerWins: (count) => `Bạn thắng: ${count}`,
+            aiWins: (count) => `TanamiChatbot thắng: ${count}`,
+            draws: (count) => `Hòa: ${count}`
         },
         en: {
             title: "WeAreGenZ",
@@ -410,7 +645,18 @@
             dateModalTitle: "Select start date living alone",
             dateInputLabel: "Start Date:",
             errorInvalidDate: "Invalid date",
-            confirmBtn: "Confirm"
+            confirmBtn: "Confirm",
+            // Game X-O texts
+            ticTacToeBtn: "🎮 Play X-O",
+            ticTacToeTitle: "Tic-Tac-Toe - Play with TanamiChatbot",
+            playerTurn: (player) => `${player}'s turn`,
+            playerWin: (player) => `${player} Wins!`,
+            draw: "Draw!",
+            restartGame: "Play Again",
+            gameStatsTitle: "Statistics",
+            playerWins: (count) => `You Wins: ${count}`,
+            aiWins: (count) => `TanamiChatbot Wins: ${count}`,
+            draws: (count) => `Draws: ${count}`
         },
         jp: {
             title: "WeAreGenZ",
@@ -422,7 +668,18 @@
             dateModalTitle: "一人暮らし開始日を選択",
             dateInputLabel: "開始日:",
             errorInvalidDate: "無効な日付",
-            confirmBtn: "確認"
+            confirmBtn: "確認",
+            // Game X-O texts
+            ticTacToeBtn: "🎮 マルバツ",
+            ticTacToeTitle: "まるばつゲーム - TanamiChatbotと対戦",
+            playerTurn: (player) => `${player}のターン`,
+            playerWin: (player) => `${player}の勝ち！`,
+            draw: "引き分け！",
+            restartGame: "もう一度遊ぶ",
+            gameStatsTitle: "統計",
+            playerWins: (count) => `あなたの勝ち: ${count}`,
+            aiWins: (count) => `TanamiChatbotの勝ち: ${count}`,
+            draws: (count) => `引き分け: ${count}`
         }
     };
 
@@ -451,6 +708,28 @@
         document.getElementById('dateInputLabel').textContent = t.dateInputLabel;
         document.getElementById('errorMsg').textContent = t.errorInvalidDate;
         document.querySelector('#dateForm button[type=submit]').textContent = t.confirmBtn;
+        
+        // Update Tic-Tac-Toe texts
+        document.getElementById('ticTacToeBtn').textContent = t.ticTacToeBtn;
+        document.getElementById('ticTacToeTitle').textContent = t.ticTacToeTitle;
+        document.getElementById('restartGameBtn').textContent = t.restartGame;
+        document.getElementById('gameStatsTitle').textContent = t.gameStatsTitle;
+
+        // Update game status if game is active
+        if (gameActive) {
+            const playerName = lang === 'vi' ? "Bạn" : (lang === 'en' ? "You" : "あなた");
+            gameStatus.textContent = t.playerTurn(currentPlayer === playerChar ? playerName : "TanamiChatbot");
+        } else if (winner === playerChar) {
+            const playerName = lang === 'vi' ? "Bạn" : (lang === 'en' ? "You" : "あなた");
+            gameStatus.textContent = t.playerWin(playerName);
+        } else if (winner === aiChar) {
+            gameStatus.textContent = t.playerWin("TanamiChatbot");
+        }
+        else if (!gameActive && gameBoard.every(cell => cell !== '')) {
+            gameStatus.textContent = t.draw;
+        }
+
+        renderGameStats(); // Cập nhật thống kê với ngôn ngữ mới
     }
 
     // =======================
@@ -498,127 +777,421 @@
     function closeModal(modal) {
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
+        // Gỡ bỏ focus trap nếu có
+        const removeTrap = modal._removeTrap;
+        if (removeTrap) {
+            removeTrap();
+            delete modal._removeTrap;
+        }
     }
 
     // =======================
-    // Xử lý ngôn ngữ
+    // Logic tính ngày
     // =======================
-    const langBtn = document.getElementById('langBtn');
-    const langModal = document.getElementById('langModal');
-    const closeLangModalBtn = document.getElementById('closeLangModal');
-    let removeTrapLang = null;
-
-    langBtn.addEventListener('click', () => {
-        removeTrapLang = openModal(langModal);
-    });
-    closeLangModalBtn.addEventListener('click', () => {
-        closeModal(langModal);
-        if (removeTrapLang) removeTrapLang();
-    });
-    langModal.addEventListener('click', e => {
-        if (e.target === langModal) {
-            closeModal(langModal);
-            if (removeTrapLang) removeTrapLang();
-        }
-    });
-    langModal.querySelectorAll('.lang-list button').forEach(btn => {
-        btn.addEventListener('click', e => {
-            const selectedLang = btn.dataset.lang;
-            setLang(selectedLang);
-            location.reload();
-        });
-    });
-
-    // =======================
-    // Xử lý popup chọn ngày bắt đầu
-    // =======================
-    const dateModal = document.getElementById('dateModal');
-    const closeDateModalBtn = document.getElementById('closeDateModal');
-    const changeDateBtn = document.getElementById('changeDateBtn');
-    const dateForm = document.getElementById('dateForm');
+    const daysCountElement = document.getElementById('daysCount');
     const startDateInput = document.getElementById('startDateInput');
+    const dateForm = document.getElementById('dateForm');
     const errorMsg = document.getElementById('errorMsg');
-    let removeTrapDate = null;
+    const changeDateBtn = document.getElementById('changeDateBtn');
+    const dateModal = document.getElementById('dateModal');
+    const closeDateModal = document.getElementById('closeDateModal');
 
-    function openDateModal() {
-        removeTrapDate = openModal(dateModal);
-        errorMsg.style.display = 'none';
-        startDateInput.classList.remove('invalid');
-        // Set giá trị input bằng ngày đã lưu hoặc ngày hôm nay
-        const storedDate = localStorage.getItem('waGenZ_startDate');
-        startDateInput.value = storedDate || '';
-    }
-
-    function closeDateModal() {
-        closeModal(dateModal);
-        if (removeTrapDate) removeTrapDate();
-    }
-
-    closeDateModalBtn.addEventListener('click', closeDateModal);
-    changeDateBtn.addEventListener('click', openDateModal);
-    dateModal.addEventListener('click', e => {
-        if (e.target === dateModal) {
-            closeDateModal();
+    // Load ngày từ Local Storage
+    function loadStartDate() {
+        const storedDate = localStorage.getItem('startDate');
+        if (storedDate) {
+            startDateInput.value = storedDate;
+            calculateAndDisplayDays(storedDate);
+        } else {
+            // Nếu chưa có, mở modal chọn ngày
+            openModal(dateModal);
         }
-    });
+    }
 
-    // Kiểm tra ngày hợp lệ, không được để ngày tương lai
-    function validateDate(dateStr) {
-        if (!dateStr) return false;
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return false;
+    // Tính toán và hiển thị số ngày
+    function calculateAndDisplayDays(dateString) {
+        const startDate = new Date(dateString);
         const today = new Date();
-        // Đặt giờ 0h0'0'' cho so sánh đúng ngày
-        today.setHours(0, 0, 0, 0);
-        if (date > today) return false;
-        return true;
-    }
-
-    dateForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const val = startDateInput.value;
-        if (!validateDate(val)) {
-            errorMsg.style.display = 'block';
-            startDateInput.classList.add('invalid');
-            startDateInput.focus();
-            return;
-        }
-        errorMsg.style.display = 'none';
-        startDateInput.classList.remove('invalid');
-        localStorage.setItem('waGenZ_startDate', val);
-        closeDateModal();
-        updateDaysCount();
-    });
-
-    // =======================
-    // Tính ngày sống một mình
-    // =======================
-    function updateDaysCount() {
-        const lang = getLang();
-        const t = texts[lang];
-        const daysCountEl = document.getElementById('daysCount');
-        const startDateStr = localStorage.getItem('waGenZ_startDate');
-        if (!startDateStr) {
-            daysCountEl.textContent = t.daysCountText(0);
-            openDateModal();
-            return;
-        }
-        const startDate = new Date(startDateStr);
-        const today = new Date();
-        // reset giờ để tính chính xác
+        // Đặt giờ về 00:00:00 để tính toán chính xác số ngày
         startDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        let diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-        if (diff < 0) diff = 0;
-        daysCountEl.textContent = t.daysCountText(diff);
+
+        const diffTime = Math.abs(today.getTime() - startDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        const t = texts[getLang()];
+        daysCountElement.textContent = t.daysCountText(diffDays);
+    }
+
+    // Validate và lưu ngày
+    dateForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const selectedDate = startDateInput.value;
+        if (!selectedDate) {
+            startDateInput.classList.add('invalid');
+            errorMsg.style.display = 'block';
+            errorMsg.textContent = texts[getLang()].errorInvalidDate;
+            return;
+        }
+
+        const dateObj = new Date(selectedDate);
+        const today = new Date();
+        today.setHours(0,0,0,0); // Reset time for accurate comparison
+
+        if (dateObj > today) {
+            startDateInput.classList.add('invalid');
+            errorMsg.style.display = 'block';
+            errorMsg.textContent = "Ngày không được lớn hơn ngày hiện tại!"; // Luôn là tiếng Việt cho lỗi này để dễ hiểu
+            return;
+        }
+
+        localStorage.setItem('startDate', selectedDate);
+        calculateAndDisplayDays(selectedDate);
+        startDateInput.classList.remove('invalid');
+        errorMsg.style.display = 'none';
+        closeModal(dateModal);
+    });
+
+    startDateInput.addEventListener('change', () => {
+        startDateInput.classList.remove('invalid');
+        errorMsg.style.display = 'none';
+    });
+
+    changeDateBtn.addEventListener('click', () => openModal(dateModal));
+    closeDateModal.addEventListener('click', () => closeModal(dateModal));
+
+    // =======================
+    // Xử lý chuyển đổi ngôn ngữ
+    // =======================
+    const langModal = document.getElementById('langModal');
+    const langBtn = document.getElementById('langBtn');
+    const closeLangModal = document.getElementById('closeLangModal');
+    const langList = document.querySelector('.lang-list');
+
+    langBtn.addEventListener('click', () => openModal(langModal));
+    closeLangModal.addEventListener('click', () => closeModal(langModal));
+
+    langList.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const newLang = e.target.dataset.lang;
+            if (newLang) {
+                setLang(newLang);
+                updateTexts();
+                loadStartDate(); // Cập nhật lại số ngày với ngôn ngữ mới
+                closeModal(langModal);
+            }
+        }
+    });
+
+    // =======================
+    // Game X-O (Tic-Tac-Toe) Logic
+    // =======================
+    const ticTacToeBtn = document.getElementById('ticTacToeBtn');
+    const ticTacToeModal = document.getElementById('ticTacToeModal');
+    const closeTicTacToeModal = document.getElementById('closeTicTacToeModal');
+    const cells = document.querySelectorAll('.cell');
+    const gameStatus = document.getElementById('gameStatus');
+    const restartGameBtn = document.getElementById('restartGameBtn');
+    const flowerBorderContainer = document.getElementById('flowerBorderContainer');
+
+    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X'; // Player is X, AI is O
+    let gameActive = true;
+    let winner = null;
+
+    // Game Stats
+    let playerWins = parseInt(localStorage.getItem('ticTacToePlayerWins') || '0');
+    let aiWins = parseInt(localStorage.getItem('ticTacToeAIWins') || '0');
+    let draws = parseInt(localStorage.getItem('ticTacToeDraws') || '0');
+
+    const playerChar = 'X';
+    const aiChar = 'O';
+
+    const winningConditions = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6]             // diagonals
+    ];
+
+    function renderGameStats() {
+        const t = texts[getLang()];
+        document.getElementById('playerWins').textContent = t.playerWins(playerWins);
+        document.getElementById('aiWins').textContent = t.aiWins(aiWins);
+        document.getElementById('draws').textContent = t.draws(draws);
+    }
+
+    function saveGameStats() {
+        localStorage.setItem('ticTacToePlayerWins', playerWins);
+        localStorage.setItem('ticTacToeAIWins', aiWins);
+        localStorage.setItem('ticTacToeDraws', draws);
+    }
+
+    function handleCellPlayed(clickedCell, clickedCellIndex) {
+        gameBoard[clickedCellIndex] = currentPlayer;
+        clickedCell.textContent = currentPlayer;
+        clickedCell.classList.add(currentPlayer.toLowerCase());
+    }
+
+    function handleResultValidation() {
+        let roundWon = false;
+        for (let i = 0; i < winningConditions.length; i++) {
+            const winCondition = winningConditions[i];
+            let a = gameBoard[winCondition[0]];
+            let b = gameBoard[winCondition[1]];
+            let c = gameBoard[winCondition[2]];
+
+            if (a === '' || b === '' || c === '') {
+                continue;
+            }
+            if (a === b && b === c) {
+                roundWon = true;
+                break;
+            }
+        }
+
+        const t = texts[getLang()];
+        const playerName = getLang() === 'vi' ? "Bạn" : (getLang() === 'en' ? "You" : "あなた");
+
+        if (roundWon) {
+            winner = currentPlayer;
+            gameActive = false;
+            if (currentPlayer === playerChar) {
+                playerWins++;
+                gameStatus.textContent = t.playerWin(playerName);
+            } else {
+                aiWins++;
+                gameStatus.textContent = t.playerWin("TanamiChatbot");
+            }
+            saveGameStats();
+            renderGameStats();
+            return;
+        }
+
+        // Check for draw
+        if (!gameBoard.includes('')) {
+            gameActive = false;
+            draws++;
+            gameStatus.textContent = t.draw;
+            saveGameStats();
+            renderGameStats();
+            winner = null; // Reset winner for draw
+            return;
+        }
+
+        // Continue game
+        currentPlayer = currentPlayer === playerChar ? aiChar : playerChar;
+        gameStatus.textContent = t.playerTurn(currentPlayer === playerChar ? playerName : "TanamiChatbot");
+
+        if (currentPlayer === aiChar && gameActive) {
+            setTimeout(handleAIChoice, 700); // AI makes a move after a short delay
+        }
+    }
+
+    function handleCellClick(e) {
+        const clickedCell = e.target;
+        const clickedCellIndex = parseInt(clickedCell.dataset.cellIndex);
+
+        if (gameBoard[clickedCellIndex] !== '' || !gameActive || currentPlayer === aiChar) {
+            return;
+        }
+
+        handleCellPlayed(clickedCell, clickedCellIndex);
+        handleResultValidation();
+    }
+
+    function handleAIChoice() {
+        const availableMoves = gameBoard
+            .map((cell, index) => cell === '' ? index : null)
+            .filter(index => index !== null);
+
+        if (availableMoves.length > 0 && gameActive) {
+            // Simple AI: prioritize winning, blocking, then random
+            let bestMove = -1;
+
+            // 1. Check for AI winning moves
+            for (let i = 0; i < winningConditions.length; i++) {
+                const move = availableMoves[i];
+                gameBoard[move] = aiChar;
+                if (checkWin(aiChar)) {
+                    bestMove = move;
+                    gameBoard[move] = ''; // undo
+                    break;
+                }
+                gameBoard[move] = ''; // undo
+            }
+
+            // 2. Check for player blocking moves
+            if (bestMove === -1) {
+                for (let i = 0; i < availableMoves.length; i++) {
+                    const move = availableMoves[i];
+                    gameBoard[move] = playerChar;
+                    if (checkWin(playerChar)) {
+                        bestMove = move;
+                        gameBoard[move] = ''; // undo
+                        break;
+                    }
+                    gameBoard[move] = ''; // undo
+                }
+            }
+            
+            // 3. Take center if available
+            if (bestMove === -1 && gameBoard[4] === '') {
+                bestMove = 4;
+            }
+
+            // 4. Take a corner if available
+            if (bestMove === -1) {
+                const corners = [0, 2, 6, 8].filter(index => gameBoard[index] === '');
+                if (corners.length > 0) {
+                    bestMove = corners[Math.floor(Math.random() * corners.length)];
+                }
+            }
+
+            // 5. Take any remaining available spot
+            if (bestMove === -1) {
+                bestMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            }
+
+
+            const cellToPlay = document.querySelector(`[data-cell-index="${bestMove}"]`);
+            handleCellPlayed(cellToPlay, bestMove);
+            handleResultValidation();
+        }
+    }
+
+    function checkWin(player) {
+        for (let i = 0; i < winningConditions.length; i++) {
+            const winCondition = winningConditions[i];
+            let a = gameBoard[winCondition[0]];
+            let b = gameBoard[winCondition[1]];
+            let c = gameBoard[winCondition[2]];
+
+            if (a === player && b === player && c === player) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function restartGame() {
+        gameBoard = ['', '', '', '', '', '', '', '', ''];
+        currentPlayer = 'X';
+        gameActive = true;
+        winner = null;
+        const t = texts[getLang()];
+        const playerName = getLang() === 'vi' ? "Bạn" : (getLang() === 'en' ? "You" : "あなた");
+        gameStatus.textContent = t.playerTurn(playerName);
+        cells.forEach(cell => {
+            cell.textContent = '';
+            cell.classList.remove('x', 'o');
+        });
+        removeFlowerPetals(); // Xóa cánh hoa cũ khi khởi động lại
+    }
+
+    cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+    restartGameBtn.addEventListener('click', restartGame);
+
+    // Initial render for game stats
+    renderGameStats();
+
+    ticTacToeBtn.addEventListener('click', () => {
+        openModal(ticTacToeModal);
+        restartGame(); // Reset game when opening the modal
+        showFlowerBorder(); // Show flowers when game modal opens
+    });
+    closeTicTacToeModal.addEventListener('click', () => {
+        closeModal(ticTacToeModal);
+        hideFlowerBorder(); // Hide flowers when game modal closes
+    });
+
+    // =======================
+    // Hiệu ứng hoa rơi (cho game X-O)
+    // =======================
+    const flowerImages = [
+        'https://i.imgur.com/vHq4D0O.png', // Hoa hồng (có nền trong suốt)
+        'https://i.imgur.com/kS9ZkYc.png', // Hoa đào 1 (có nền trong suốt)
+        'https://i.imgur.com/s6pLp9N.png'  // Hoa đào 2 (có nền trong suốt)
+    ];
+
+    let flowerInterval;
+    let flowerElements = [];
+
+    function createFlowerPetal() {
+        const flowerEl = document.createElement('div');
+        flowerEl.classList.add('flower-petal');
+
+        const randomIndex = Math.floor(Math.random() * flowerImages.length);
+        flowerEl.style.backgroundImage = `url('${flowerImages[randomIndex]}')`;
+
+        const size = Math.random() * 30 + 20; // Kích thước từ 20px đến 50px
+        flowerEl.style.setProperty('--petal-size', `${size}px`);
+
+        const startX = Math.random() * 100; // Vị trí X ban đầu (0% - 100% chiều rộng container)
+        const startY = -size; // Bắt đầu từ phía trên container
+        flowerEl.style.left = `${startX}%`;
+        flowerEl.style.top = `${startY}px`;
+
+        const animationDuration = Math.random() * 10 + 5; // Thời gian rơi từ 5s đến 15s
+        flowerEl.style.setProperty('--animation-duration', `${animationDuration}s`);
+
+        const endY = `calc(100% + ${size}px)`; // Kết thúc dưới container
+        const endX = startX + (Math.random() - 0.5) * 50; // Lệch X ngẫu nhiên
+        flowerEl.style.setProperty('--start-x', `${startX}%`);
+        flowerEl.style.setProperty('--start-y', `${startY}px`);
+        flowerEl.style.setProperty('--end-x', `${endX}%`);
+        flowerEl.style.setProperty('--end-y', `${endY}`);
+
+        const startRot = Math.random() * 360;
+        const endRot = startRot + (Math.random() - 0.5) * 720; // Xoay ngẫu nhiên
+        flowerEl.style.setProperty('--start-rot', `${startRot}deg`);
+        flowerEl.style.setProperty('--end-rot', `${endRot}deg`);
+
+        const swayDuration = Math.random() * 4 + 2; // Thời gian lắc lư từ 2s đến 6s
+        const swayRotation = (Math.random() - 0.5) * 30; // Góc lắc lư
+        const swayOffset = (Math.random() - 0.5) * 20; // Lệch ngang khi lắc lư
+        flowerEl.style.setProperty('--sway-duration', `${swayDuration}s`);
+        flowerEl.style.setProperty('--sway-rotation', `${swayRotation}deg`);
+        flowerEl.style.setProperty('--sway-offset', `${swayOffset}px`);
+
+        flowerBorderContainer.appendChild(flowerEl);
+        flowerElements.push(flowerEl);
+
+        // Xóa phần tử sau khi animation kết thúc để tránh DOM bị đầy
+        flowerEl.addEventListener('animationend', () => {
+            flowerEl.remove();
+            flowerElements = flowerElements.filter(el => el !== flowerEl);
+        });
+    }
+
+    function showFlowerBorder() {
+        flowerBorderContainer.style.display = 'block';
+        if (!flowerInterval) {
+            flowerInterval = setInterval(createFlowerPetal, 500); // Tạo hoa mỗi 0.5 giây
+        }
+    }
+
+    function hideFlowerBorder() {
+        flowerBorderContainer.style.display = 'none';
+        if (flowerInterval) {
+            clearInterval(flowerInterval);
+            flowerInterval = null;
+        }
+        removeFlowerPetals();
+    }
+
+    function removeFlowerPetals() {
+        flowerElements.forEach(el => el.remove());
+        flowerElements = [];
     }
 
     // =======================
-    // Khởi tạo
+    // Khởi tạo khi tải trang
     // =======================
-    updateTexts();
-    updateDaysCount();
-</script>
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTexts();
+        loadStartDate();
+    });
 
+</script>
 </body>
 </html>
